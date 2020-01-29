@@ -47,3 +47,29 @@ exports.down = function(knex) {
 ```
 #### Commands to execute migrations:
 - When you want the latest -> npx knex migrate:latest
+
+#### Somes comands in create migrations.
+```
+exports.up = function(knex) {
+  return knex.schema.createTable('usuarios', table => { // Create the table
+    table.increments('id').primary() // Increments the value
+    table.string('name').notNull() // Not null
+    table.string('email').notNull().unique()
+    table.string('password',60).notNull()
+    table.boolean('active').notNull().defaultTo(true) // DefaultTo -> Default value
+    table.timestamp('date_created').defaultTo(knex.fn.now()) // knex.fn.now() define the exact hour
+  })
+};
+exports.us = function(knex) {
+    return knex.schema.createTable('users_profiles', table => {
+    table.integer('users_id').unsigned() // Avoid conflicts
+    table.integer('profiles_id').unsigned()
+    table.foreigner('user_id').references('users.id')
+    table.foreigner('profile_id').references('profiles.id') // How to reference one key in a table 
+    table.primary(['user_id', 'profile_id']) // How to use group keys
+  })
+};
+  } )
+}
+
+```  
